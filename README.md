@@ -40,12 +40,12 @@ The following features are currently not implemented:
 Time to parse and print the traceroutes from `abz-uk.team-probing.c009127.20210202.warts` (52MB).  
 Measured on a 2020 M1 MacBook Air.
 
-| Library                            | Time (s)   |
-|------------------------------------|------------|
-| warts / `read_traceroute`          | 0.797      |
-| Scamper / `sc_warts2text`          | 1.125      |
-| pywarts / `parse_from_stdin.py`    | 12.405     |
-| cmand/scamper / `sc_warts2text.py` | 21.207     |
+| Library                                                                              | Time (s)   |
+|--------------------------------------------------------------------------------------|------------|
+| warts / `read_traceroute`                                                            | 0.797      |
+| [Scamper](https://www.caida.org/catalog/software/scamper/) / `sc_warts2text`         | 1.125      |
+| [pywarts](https://github.com/drakkar-lig/scamper-pywarts) / `parse_from_stdin.py`    | 12.405     |
+| [cmand/scamper](https://github.com/cmand/scamper) / `sc_warts2text.py`               | 21.207     |
 
 ### Object types
 
