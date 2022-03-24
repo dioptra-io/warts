@@ -1,0 +1,24 @@
+list id 0, name default, descr "default"
+cycle start, list default 0, cycle 0, time Tue Feb  8 17:50:38 2022
+ping from 137.194.165.109 to 8.8.8.8
+ list id: 0, name: default
+ cycle id: 0
+ user-id: 0
+ start: Tue Feb  8 17:50:38 2022 115756
+ probe-count: 4, size: 84, wait: 1, timeout: 1, ttl: 64
+ method: icmp-echo
+ probes-sent: 4, stop-reason: done
+reply from 8.8.8.8, attempt: 1, tx: 0.000463s, rtt: 0.002368s
+ size: 84, ttl: 118, probe-ipid: 0x4f74, reply-ipid: 0x0000
+ icmp type: 0, code: 0
+reply from 8.8.8.8, attempt: 2, tx: 1.001058s, rtt: 0.002068s
+ size: 84, ttl: 118, probe-ipid: 0xb5de, reply-ipid: 0x0000
+ icmp type: 0, code: 0
+reply from 8.8.8.8, attempt: 3, tx: 2.002073s, rtt: 0.001761s
+ size: 84, ttl: 118, probe-ipid: 0x23b3, reply-ipid: 0x0000
+ icmp type: 0, code: 0
+reply from 8.8.8.8, attempt: 4, tx: 3.007786s, rtt: 0.001591s
+ size: 84, ttl: 118, probe-ipid: 0x64a0, reply-ipid: 0x0000
+ icmp type: 0, code: 0
+
+cycle stop, list default 0, cycle 0, time Tue Feb  8 17:50:42 2022

@@ -1,0 +1,24 @@
+list id 0, name default, descr "default"
+cycle start, list default 0, cycle 0, time Tue Feb  8 15:37:08 2022
+ping from 2001:660:330f:a4:cb1b:c708:5d23:658f to 2001:4860:4860::8888
+ list id: 0, name: default
+ cycle id: 0
+ user-id: 0
+ start: Tue Feb  8 15:37:08 2022 679316
+ probe-count: 4, size: 104, wait: 1, timeout: 1, ttl: 64
+ method: icmp-echo
+ probes-sent: 4, stop-reason: done
+reply from 2001:4860:4860::8888, attempt: 1, tx: 0.000401s, rtt: 0.002429s
+ size: 104, ttl: 115
+ icmp type: 129, code: 0
+reply from 2001:4860:4860::8888, attempt: 2, tx: 1.005569s, rtt: 0.002434s
+ size: 104, ttl: 115
+ icmp type: 129, code: 0
+reply from 2001:4860:4860::8888, attempt: 3, tx: 2.008345s, rtt: 0.002368s
+ size: 104, ttl: 115
+ icmp type: 129, code: 0
+reply from 2001:4860:4860::8888, attempt: 4, tx: 3.009302s, rtt: 0.002169s
+ size: 104, ttl: 115
+ icmp type: 129, code: 0
+
+cycle stop, list default 0, cycle 0, time Tue Feb  8 15:37:12 2022

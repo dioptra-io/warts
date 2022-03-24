@@ -1,0 +1,12 @@
+[package]
+name = "warts"
+version = "0.1.0"
+description = "Rust implementation of the warts format."
+license = "MIT"
+authors = ["Maxime Mouchet <maxime.mouchet@lip6.fr>"]
+repository = "https://github.com/dioptra-io/warts/"
+edition = "2021"
+
+[dependencies]
+chrono = "0.4"
+deku = "0.12"

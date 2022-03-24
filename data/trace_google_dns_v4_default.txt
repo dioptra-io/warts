@@ -1,0 +1,45 @@
+list id 0, name default, descr "default"
+cycle start, list default 0, cycle 0, time Tue Feb  8 14:35:19 2022
+traceroute from 137.194.165.109 to 8.8.8.8
+ list id: 0, name: default
+ cycle id: 0
+ user-id: 0
+ start: Tue Feb  8 14:35:19 2022 811234
+ type: udp paris, sport: 57352, dport: 33435
+ attempts: 2, hoplimit: 0, loops: 1, probec: 8
+ squeries: 1, gaplimit: 5, gapaction: stop
+ wait-timeout: 5s
+ flags: 0x00
+ stop reason: done
+hop  1  137.194.164.254
+ attempt: 1, tx: 0.000374s, rtt: 0.001057s, probe-size: 44
+ reply-ttl: 254, reply-size: 56, reply-ipid: 0x0183, reply-tos 0x00
+ icmp-type: 11, icmp-code: 0, q-ttl: 1, q-len: 44, q-tos 0
+ flags: 0x11 ( sockrxts replyttl )
+hop  2  137.194.22.119
+ attempt: 1, tx: 0.049023s, rtt: 0.000955s, probe-size: 44
+ reply-ttl: 254, reply-size: 56, reply-ipid: 0x0000, reply-tos 0x00
+ icmp-type: 11, icmp-code: 0, q-ttl: 1, q-len: 44, q-tos 0
+ flags: 0x11 ( sockrxts replyttl )
+hop  3  212.73.200.45
+ attempt: 1, tx: 0.100747s, rtt: 0.001443s, probe-size: 44
+ reply-ttl: 62, reply-size: 72, reply-ipid: 0x2744, reply-tos 0x00
+ icmp-type: 11, icmp-code: 0, q-ttl: 1, q-len: 44, q-tos 0
+ flags: 0x11 ( sockrxts replyttl )
+hop  4  4.69.133.238
+ attempt: 1, tx: 0.149624s, rtt: 0.001556s, probe-size: 44
+ reply-ttl: 251, reply-size: 56, reply-ipid: 0x0000, reply-tos 0x00
+ icmp-type: 11, icmp-code: 0, q-ttl: 1, q-len: 44, q-tos 0
+ flags: 0x11 ( sockrxts replyttl )
+hop  5  4.68.71.138
+ attempt: 1, tx: 0.199882s, rtt: 0.001507s, probe-size: 44
+ reply-ttl: 56, reply-size: 72, reply-ipid: 0x4d24, reply-tos 0x00
+ icmp-type: 11, icmp-code: 0, q-ttl: 1, q-len: 44, q-tos 0
+ flags: 0x11 ( sockrxts replyttl )
+hop  7  8.8.8.8
+ attempt: 1, tx: 10.267924s, rtt: 0.001969s, probe-size: 44
+ reply-ttl: 118, reply-size: 56, reply-ipid: 0x0000, reply-tos 0x00
+ icmp-type: 3, icmp-code: 3, q-ttl: 1, q-len: 44, q-tos 128
+ flags: 0x11 ( sockrxts replyttl )
+
+cycle stop, list default 0, cycle 0, time Tue Feb  8 14:35:30 2022
