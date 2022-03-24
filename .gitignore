@@ -13,3 +13,5 @@ Cargo.lock
 *.profraw
 lcov.info
 html/
+
+test.warts

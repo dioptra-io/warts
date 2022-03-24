@@ -17,7 +17,7 @@ You can run one of the examples in [`examples/`](examples/):
 ```bash
 cargo run --release --example dump data/trace_google_dns_v6_default.warts
 cargo run --release --example read_traceroute data/trace_google_dns_v6_default.warts
-cargo run --release --example write_traceroute # TODO
+cargo run --release --example write_traceroute > test.warts
 ```
 
 To use in your own project, add the following dependency to `Cargo.toml`:
