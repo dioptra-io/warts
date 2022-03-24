@@ -38,7 +38,7 @@ The following features are currently not implemented:
 ## Performance
 
 Time to parse and print the traceroutes from `abz-uk.team-probing.c009127.20210202.warts` (52MB).  
-Measured on a 2020 M1 MacBook Air.
+Measured  with [hyperfine](https://github.com/sharkdp/hyperfine) on a 2020 M1 MacBook Air.
 
 | Library                                                                              | Time (s)   |
 |--------------------------------------------------------------------------------------|------------|
