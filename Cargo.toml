@@ -1,6 +1,6 @@
 [package]
 name = "warts"
-version = "0.1.1"
+version = "0.1.2"
 description = "Rust implementation of the warts format."
 license = "MIT"
 authors = ["Maxime Mouchet <maxime.mouchet@lip6.fr>"]
