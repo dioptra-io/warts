@@ -1,11 +1,14 @@
 # 💢 warts
 
+[![Build](https://img.shields.io/github/workflow/status/dioptra-io/warts/Build)](https://github.com/dioptra-io/warts/actions/workflows/build.yml)
+[![Coverage](https://img.shields.io/codecov/c/github/dioptra-io/warts)](https://app.codecov.io/gh/dioptra-io/warts)
+[![crates.io](https://img.shields.io/crates/v/warts?logo=crates)](https://crates.io/crates/warts/)
+[![docs.rs](https://img.shields.io/docsrs/warts)](https://docs.rs/warts/)
+
 This crate implements reading and writing
 [`warts(5)`](https://www.caida.org/catalog/software/scamper/man/warts.5.pdf)
 files produced by CAIDA's [Scamper](https://www.caida.org/catalog/software/scamper/) tool.  
 It relies on the excellent [deku](https://github.com/sharksforarms/deku) crate for serializing and deserializing the binary format.
-
-TODO: Link to documentation.
 
 ## Usage
 

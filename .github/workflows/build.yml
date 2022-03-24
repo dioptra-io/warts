@@ -1,17 +1,15 @@
-name: Tests
+name: Build
 
 on: [push, pull_request]
 
-env:
-  CARGO_TERM_COLOR: "always"
-  # https://github.com/mozilla/grcov#example-how-to-generate-source-based-coverage-for-a-rust-project
-  LLVM_PROFILE_FILE: "%p-%m.profraw"
-  RUSTC_BOOTSTRAP: "1"
-  RUSTFLAGS: "-Zinstrument-coverage"
-
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    env:
+      # https://github.com/mozilla/grcov#example-how-to-generate-source-based-coverage-for-a-rust-project
+      LLVM_PROFILE_FILE: "%p-%m.profraw"
+      RUSTC_BOOTSTRAP: "1"
+      RUSTFLAGS: "-Zinstrument-coverage"
     steps:
       - uses: actions/checkout@v2
       - name: Build
@@ -24,3 +22,12 @@ jobs:
           curl -L https://github.com/mozilla/grcov/releases/latest/download/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf -
           ./grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "/*" -o lcov.info
       - uses: codecov/codecov-action@v2
+  publish:
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
