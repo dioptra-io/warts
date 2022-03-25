@@ -23,7 +23,7 @@ cargo run --release --example write_traceroute > test.warts
 To use in your own project, add the following dependency to `Cargo.toml`:
 ```toml
 [dependencies]
-warts = "0.1"
+warts = "0.2"
 ```
 
 ## Limitations
