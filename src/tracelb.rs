@@ -2,6 +2,72 @@ use crate::{Address, Flags, ICMPExtension, Timeval};
 use deku::prelude::*;
 use std::ffi::CString;
 
+/// An MDA traceroute.
+#[derive(Debug, PartialEq, DekuRead, DekuWrite)]
+#[deku(ctx = "endian: deku::ctx::Endian", endian = "endian")]
+pub struct MultipathTraceroute {
+    pub length: u32,
+    pub flags: Flags,
+    #[deku(cond = "flags.any()")]
+    pub param_length: Option<u16>,
+    #[deku(cond = "flags.get(1)")]
+    pub list_id: Option<u32>,
+    #[deku(cond = "flags.get(2)")]
+    pub cycle_id: Option<u32>,
+    #[deku(cond = "flags.get(3)")]
+    pub src_addr_id: Option<u32>,
+    #[deku(cond = "flags.get(4)")]
+    pub dst_addr_id: Option<u32>,
+    #[deku(cond = "flags.get(5)")]
+    pub start_time: Option<Timeval>,
+    #[deku(cond = "flags.get(6)")]
+    pub src_port: Option<u16>,
+    #[deku(cond = "flags.get(7)")]
+    pub dst_port: Option<u16>,
+    #[deku(cond = "flags.get(8)")]
+    pub probe_size: Option<u16>,
+    #[deku(cond = "flags.get(9)")]
+    pub type_: Option<u8>,
+    #[deku(cond = "flags.get(10)")]
+    pub first_hop: Option<u8>,
+    #[deku(cond = "flags.get(11)")]
+    pub wait_timeout: Option<u8>,
+    #[deku(cond = "flags.get(12)")]
+    pub wait_probe: Option<u8>,
+    #[deku(cond = "flags.get(13)")]
+    pub attempts: Option<u8>,
+    #[deku(cond = "flags.get(14)")]
+    pub confidence: Option<u8>,
+    #[deku(cond = "flags.get(15)")]
+    pub ip_tos: Option<u8>,
+    #[deku(cond = "flags.get(16)")]
+    pub node_count: Option<u16>,
+    #[deku(cond = "flags.get(17)")]
+    pub link_count: Option<u16>,
+    #[deku(cond = "flags.get(18)")]
+    pub probe_count: Option<u32>,
+    #[deku(cond = "flags.get(19)")]
+    pub probe_count_max: Option<u32>,
+    #[deku(cond = "flags.get(20)")]
+    pub gap_limit: Option<u8>,
+    #[deku(cond = "flags.get(21)")]
+    pub src_addr: Option<Address>,
+    #[deku(cond = "flags.get(22)")]
+    pub dst_addr: Option<Address>,
+    #[deku(cond = "flags.get(23)")]
+    pub user_id: Option<u32>,
+    // TODO: Enum
+    #[deku(cond = "flags.get(24)")]
+    pub flags2: Option<u8>,
+    #[deku(cond = "flags.get(25)")]
+    pub router_addr: Option<Address>,
+    // TODO: unwrap_or? or use flag?
+    #[deku(count = "node_count.unwrap()")]
+    pub nodes: Vec<MultipathTraceNode>,
+    #[deku(count = "link_count.unwrap()")]
+    pub links: Vec<MultipathTraceLink>,
+}
+
 /// A node in a multipath traceroute.
 #[derive(Debug, PartialEq, DekuRead, DekuWrite)]
 #[deku(ctx = "endian: deku::ctx::Endian", endian = "endian")]

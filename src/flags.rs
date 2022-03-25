@@ -1,7 +1,10 @@
+use crate::WartsSized;
 use deku::bitvec::{BitSlice, BitVec, Msb0};
 use deku::ctx::Endian;
 use deku::{DekuError, DekuRead, DekuWrite};
 use std::fmt::{Debug, Formatter};
+
+// TODO: Automatically generate `fixup()` methods with a derive macro?
 
 /// A variable length flag structure.
 ///
@@ -121,6 +124,19 @@ impl DekuRead<'_, Endian> for Flags {
 impl DekuWrite<Endian> for Flags {
     fn write(&self, output: &mut BitVec<Msb0, u8>, ctx: Endian) -> Result<(), DekuError> {
         self.to_vec().write(output, ctx)
+    }
+}
+
+impl Default for Flags {
+    fn default() -> Self {
+        Flags::new(0)
+    }
+}
+
+impl WartsSized for Flags {
+    fn warts_size(&self) -> usize {
+        // TODO: Better implementation...
+        self.to_vec().len()
     }
 }
 

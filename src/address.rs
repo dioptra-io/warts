@@ -1,3 +1,4 @@
+use crate::WartsSized;
 use deku::prelude::*;
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
@@ -56,6 +57,18 @@ impl From<Address> for IpAddr {
             Address::IPv4(1, addr) => IpAddr::from(addr),
             Address::IPv6(2, addr) => IpAddr::from(addr),
             _ => panic!("not an IP address"),
+        }
+    }
+}
+
+impl WartsSized for Address {
+    fn warts_size(&self) -> usize {
+        match self {
+            Address::Reference(_) => 5,
+            Address::IPv4(_, _) => 6,
+            Address::IPv6(_, _) => 18,
+            Address::Ethernet(_, _) => 7,
+            Address::FireWire(_, _) => 9,
         }
     }
 }

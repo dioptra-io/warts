@@ -1,59 +1,82 @@
 use chrono::Utc;
 use deku::DekuContainerWrite;
 use std::ffi::CString;
+use std::io;
 use std::io::Write;
-use std::net::{IpAddr, Ipv4Addr};
-use std::{fs, io};
-use warts::Address::IPv4;
-use warts::Object::{CycleStart, CycleStop, List, Traceroute};
-use warts::{Address, Flags, Timeval, TraceProbe, TraceStopReason, TraceType};
-
-fn warts_string_len_u16(s: &CString) -> u16 {
-    return s.to_bytes_with_nul().len() as u16;
-}
-
-fn warts_string_len_u32(s: &CString) -> u32 {
-    return s.to_bytes_with_nul().len() as u32;
-}
+use std::net::Ipv4Addr;
+use warts::{
+    Address, CycleStart, CycleStop, Flags, List, Object, Timeval, TraceProbe, TraceStopReason,
+    TraceType, Traceroute,
+};
 
 fn main() {
-    // NOTE: Currently flags and length fields must be computed manually.
     let list_name = CString::new("default").unwrap();
     let hostname = CString::new("ubuntu-linux-20-04-desktop").unwrap();
-    let list = List {
-        length: 2 * 4 + 1 + 2 + 2 * warts_string_len_u32(&list_name),
+
+    let mut list = List {
+        length: 0,
         list_id: 1,
         list_id_human: 0,
         name: list_name.clone(),
-        flags: Flags::from(Vec::from([1])),
-        param_length: Some(warts_string_len_u16(&list_name)),
+        flags: Default::default(),
+        param_length: None,
         description: Some(list_name.clone()),
         monitor_name: None,
     };
-    let cycle_start = CycleStart {
-        length: 4 * 4 + 1 + 2 + warts_string_len_u32(&hostname),
+    // The `fixup()` method computes and set the flags and length fields.
+    list.fixup();
+    io::stdout().write_all(Object::List(list).to_bytes().unwrap().as_slice());
+
+    let mut cycle_start = CycleStart {
+        length: 0,
         cycle_id: 1,
         list_id: 1,
         cycle_id_human: 0,
         start_time: Utc::now().timestamp() as u32,
-        flags: Flags::from(Vec::from([2])),
-        param_length: Some(warts_string_len_u16(&hostname)),
+        flags: Default::default(),
+        param_length: None,
         stop_time: None,
         hostname: Some(hostname),
     };
-    let cycle_stop = CycleStop {
-        length: 2 * 4 + 1,
-        cycle_id: 1,
-        stop_time: Utc::now().timestamp() as u32,
-        flags: Flags::from(Vec::from([])),
+    cycle_start.fixup();
+    io::stdout().write_all(
+        Object::CycleStart(cycle_start)
+            .to_bytes()
+            .unwrap()
+            .as_slice(),
+    );
+
+    let mut tp = TraceProbe {
+        flags: Default::default(),
+        param_length: None,
+        addr_id: None,
+        probe_ttl: Some(1),
+        reply_ttl: Some(254),
+        hop_flags: Some(17),
+        probe_id: Some(0),
+        rtt_usec: Some(1057),
+        icmp_type: Some(11),
+        icmp_code: Some(0),
+        probe_size: Some(44),
+        reply_size: Some(56),
+        reply_ip_id: Some(387),
+        reply_ip_tos: Some(0),
+        next_hop_mtu: None,
+        quoted_length: None,
+        quoted_ttl: None,
+        reply_tcp_flags: None,
+        quoted_tos: Some(0),
+        icmp_extensions_length: None,
+        icmp_extensions: vec![],
+        addr: Some(Address::from(Ipv4Addr::new(137, 194, 164, 254))),
+        tx: Some(Timeval::from(Utc::now().naive_utc())),
     };
-    let traceroute = Traceroute {
+    tp.fixup();
+
+    let mut traceroute = Traceroute {
         length: 99,
-        flags: Flags::from(Vec::from([
-            1, 2, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
-            27,
-        ])),
-        param_length: Some(52),
+        flags: Flags::default(),
+        param_length: None,
         list_id: Some(1),
         cycle_id: Some(1),
         src_addr_id: None,
@@ -85,35 +108,23 @@ fn main() {
         ip_offset: None,
         router_addr: None,
         hop_count: 1,
-        hops: vec![TraceProbe {
-            flags: Flags::from(Vec::from([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16, 18, 19])),
-            param_length: Some(32),
-            addr_id: None,
-            probe_ttl: Some(1),
-            reply_ttl: Some(254),
-            hop_flags: Some(17),
-            probe_id: Some(0),
-            rtt_usec: Some(1057),
-            icmp_type: Some(11),
-            icmp_code: Some(0),
-            probe_size: Some(44),
-            reply_size: Some(56),
-            reply_ip_id: Some(387),
-            reply_ip_tos: Some(0),
-            next_hop_mtu: None,
-            quoted_length: None,
-            quoted_ttl: None,
-            reply_tcp_flags: None,
-            quoted_tos: Some(0),
-            icmp_extensions_length: None,
-            icmp_extensions: vec![],
-            addr: Some(Address::from(Ipv4Addr::new(137, 194, 164, 254))),
-            tx: Some(Timeval::from(Utc::now().naive_utc())),
-        }],
+        hops: vec![tp],
         eof: 0,
     };
-    io::stdout().write_all(list.to_bytes().unwrap().as_slice());
-    io::stdout().write_all(cycle_start.to_bytes().unwrap().as_slice());
-    io::stdout().write_all(traceroute.to_bytes().unwrap().as_slice());
-    io::stdout().write_all(cycle_stop.to_bytes().unwrap().as_slice());
+    traceroute.fixup();
+    io::stdout().write_all(
+        Object::Traceroute(traceroute)
+            .to_bytes()
+            .unwrap()
+            .as_slice(),
+    );
+
+    let mut cycle_stop = CycleStop {
+        length: 0,
+        cycle_id: 1,
+        stop_time: Utc::now().timestamp() as u32,
+        flags: Default::default(),
+    };
+    cycle_stop.fixup();
+    io::stdout().write_all(Object::CycleStop(cycle_stop).to_bytes().unwrap().as_slice());
 }

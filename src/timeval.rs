@@ -1,5 +1,7 @@
+use crate::WartsSized;
 use chrono::NaiveDateTime;
 use deku::prelude::*;
+use std::mem::size_of_val;
 
 /// A timestamp with a microsecond resolution.
 /// ```
@@ -29,6 +31,12 @@ impl From<NaiveDateTime> for Timeval {
             seconds: x.timestamp() as u32,
             microseconds: x.timestamp_subsec_micros(),
         }
+    }
+}
+
+impl WartsSized for Timeval {
+    fn warts_size(&self) -> usize {
+        size_of_val(self)
     }
 }
 

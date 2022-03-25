@@ -17,18 +17,13 @@ fn main() {
 
 fn print(object: Object) {
     match object {
-        Object::Traceroute {
-            src_addr,
-            dst_addr,
-            hops,
-            ..
-        } => {
+        Object::Traceroute(t) => {
             // NOTE: In practice, you may want to handle the case where the fields
             // behind flags are not present.
-            let src_addr = IpAddr::from(src_addr.unwrap());
-            let dst_addr = IpAddr::from(dst_addr.unwrap());
+            let src_addr = IpAddr::from(t.src_addr.unwrap());
+            let dst_addr = IpAddr::from(t.dst_addr.unwrap());
             println!("Traceroute from {} to {}", src_addr, dst_addr);
-            for hop in hops {
+            for hop in t.hops {
                 let addr = IpAddr::from(hop.addr.unwrap());
                 println!("{} {}", hop.probe_ttl.unwrap(), addr);
             }

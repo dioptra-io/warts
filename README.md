@@ -33,7 +33,6 @@ The following features are currently not implemented:
 - [ ] DoubleTree and PMTUD data
 - [ ] `tsprespec` data
 - [ ] Streaming reading
-- [ ] Automatic length/flags computation when writing warts
 
 ## Performance
 
