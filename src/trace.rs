@@ -19,6 +19,15 @@ pub enum TraceType {
     TCPAck = 0x06,
 }
 
+#[derive(Debug, PartialEq, DekuRead, DekuWrite)]
+#[deku(ctx = "endian: deku::ctx::Endian", endian = "endian", type = "u8")]
+pub enum TraceGapAction {
+    // Stop when gaplimit reached.
+    Stop = 0x01,
+    // Send TTL-255 probes.
+    LastDitch = 0x02,
+}
+
 /// Reason for the termination of a trace command.
 #[derive(Debug, PartialEq, DekuRead, DekuWrite)]
 #[deku(ctx = "endian: deku::ctx::Endian", endian = "endian", type = "u8")]
@@ -117,7 +126,7 @@ pub struct Traceroute {
     pub gap_limit: Option<u8>,
     /// What to do when the gap limit is reached, included if flag 21 is set.
     #[deku(cond = "flags.get(21)")]
-    pub gap_limit_action: Option<u8>,
+    pub gap_limit_action: Option<TraceGapAction>,
     /// What to do when a loop is found, included if flag 22 is set.
     #[deku(cond = "flags.get(22)")]
     pub loop_action: Option<u8>,
@@ -322,6 +331,12 @@ impl TraceProbe {
 }
 
 impl WartsSized for TraceType {
+    fn warts_size(&self) -> usize {
+        1
+    }
+}
+
+impl WartsSized for TraceGapAction {
     fn warts_size(&self) -> usize {
         1
     }

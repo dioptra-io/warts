@@ -5,8 +5,8 @@ use std::io;
 use std::io::Write;
 use std::net::Ipv4Addr;
 use warts::{
-    Address, CycleStart, CycleStop, Flags, List, Object, Timeval, TraceProbe, TraceStopReason,
-    TraceType, Traceroute,
+    Address, CycleStart, CycleStop, Flags, List, Object, Timeval, TraceGapAction, TraceProbe,
+    TraceStopReason, TraceType, Traceroute,
 };
 
 fn main() {
@@ -74,7 +74,7 @@ fn main() {
     tp.fixup();
 
     let mut traceroute = Traceroute {
-        length: 99,
+        length: 0,
         flags: Flags::default(),
         param_length: None,
         list_id: Some(1),
@@ -97,7 +97,7 @@ fn main() {
         allowed_loops: Some(1),
         hops_probed: Some(7),
         gap_limit: Some(5),
-        gap_limit_action: Some(1),
+        gap_limit_action: Some(TraceGapAction::LastDitch),
         loop_action: Some(0),
         probes_sent: Some(8),
         interval_csec: Some(0),
