@@ -42,7 +42,7 @@ pub struct CycleStop {
 }
 
 impl CycleStart {
-    pub fn fixup(&mut self) {
+    pub fn fixup(&mut self) -> &mut Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.stop_time);
@@ -55,15 +55,17 @@ impl CycleStart {
             + self.start_time.warts_size()
             + self.flags.warts_size()
             + self.param_length.warts_size()
-            + param_length) as u32
+            + param_length) as u32;
+        self
     }
 }
 
 impl CycleStop {
-    pub fn fixup(&mut self) {
+    pub fn fixup(&mut self) -> &mut Self {
         self.flags = Flags::new(0);
         self.length = (self.cycle_id.warts_size()
             + self.stop_time.warts_size()
-            + self.flags.warts_size()) as u32
+            + self.flags.warts_size()) as u32;
+        self
     }
 }

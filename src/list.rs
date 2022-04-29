@@ -27,7 +27,7 @@ pub struct List {
 }
 
 impl List {
-    pub fn fixup(&mut self) {
+    pub fn fixup(&mut self) -> &mut Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.description);
@@ -39,6 +39,7 @@ impl List {
             + self.name.warts_size()
             + self.flags.warts_size()
             + self.param_length.warts_size()
-            + param_length) as u32
+            + param_length) as u32;
+        self
     }
 }

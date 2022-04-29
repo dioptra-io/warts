@@ -251,7 +251,7 @@ pub struct TraceProbe {
 }
 
 impl Traceroute {
-    pub fn fixup(&mut self) {
+    pub fn fixup(&mut self) -> &mut Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.list_id);
@@ -293,12 +293,13 @@ impl Traceroute {
             + param_length
             + self.hop_count.warts_size()
             + hops_size
-            + self.eof.warts_size()) as u32
+            + self.eof.warts_size()) as u32;
+        self
     }
 }
 
 impl TraceProbe {
-    pub fn fixup(&mut self) {
+    pub fn fixup(&mut self) -> &mut Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.addr_id);
@@ -324,6 +325,7 @@ impl TraceProbe {
         push_flag!(flags, param_length, 19, self.tx.as_ref());
         self.flags = Flags::from(flags);
         self.param_length = Some(param_length as u16);
+        self
     }
     pub fn rtt_ms(&self) -> Option<f64> {
         self.rtt_usec.map(|x| x as f64 / 1000.0)

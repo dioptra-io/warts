@@ -1,4 +1,4 @@
-use crate::{Address, Flags, ICMPExtension, Timeval};
+use crate::{Address, Flags, ICMPExtension, Timeval, WartsSized};
 use deku::prelude::*;
 use std::ffi::CString;
 
@@ -61,10 +61,9 @@ pub struct MultipathTraceroute {
     pub flags2: Option<u8>,
     #[deku(cond = "flags.get(25)")]
     pub router_addr: Option<Address>,
-    // TODO: unwrap_or? or use flag?
-    #[deku(count = "node_count.unwrap()")]
+    #[deku(count = "node_count.unwrap_or(0)")]
     pub nodes: Vec<MultipathTraceNode>,
-    #[deku(count = "link_count.unwrap()")]
+    #[deku(count = "link_count.unwrap_or(0)")]
     pub links: Vec<MultipathTraceLink>,
 }
 
@@ -190,4 +189,144 @@ pub struct MultipathTraceReply {
     pub addr_id: Option<u32>,
     #[deku(cond = "flags.get(11)")]
     pub addr: Option<Address>,
+}
+
+impl MultipathTraceroute {
+    pub fn fixup(&mut self) -> &mut Self {
+        let mut flags = Vec::new();
+        let mut param_length = 0;
+        self.node_count = Some(self.nodes.len() as u16);
+        self.link_count = Some(self.links.len() as u16);
+        push_flag!(flags, param_length, 1, self.list_id);
+        push_flag!(flags, param_length, 2, self.cycle_id);
+        push_flag!(flags, param_length, 3, self.src_addr_id);
+        push_flag!(flags, param_length, 4, self.dst_addr_id);
+        push_flag!(flags, param_length, 5, self.start_time);
+        push_flag!(flags, param_length, 6, self.src_port);
+        push_flag!(flags, param_length, 7, self.dst_port);
+        push_flag!(flags, param_length, 8, self.probe_size);
+        push_flag!(flags, param_length, 9, self.type_);
+        push_flag!(flags, param_length, 10, self.first_hop);
+        push_flag!(flags, param_length, 11, self.wait_timeout);
+        push_flag!(flags, param_length, 12, self.wait_probe);
+        push_flag!(flags, param_length, 13, self.attempts);
+        push_flag!(flags, param_length, 14, self.confidence);
+        push_flag!(flags, param_length, 15, self.ip_tos);
+        push_flag!(flags, param_length, 16, self.node_count);
+        push_flag!(flags, param_length, 17, self.link_count);
+        push_flag!(flags, param_length, 18, self.probe_count);
+        push_flag!(flags, param_length, 19, self.probe_count_max);
+        push_flag!(flags, param_length, 20, self.gap_limit);
+        push_flag!(flags, param_length, 21, self.src_addr);
+        push_flag!(flags, param_length, 22, self.dst_addr);
+        push_flag!(flags, param_length, 23, self.user_id);
+        push_flag!(flags, param_length, 24, self.flags2);
+        push_flag!(flags, param_length, 25, self.router_addr);
+        self.flags = Flags::from(flags);
+        self.param_length = Some(param_length as u16);
+        let nodes_size: usize = self.nodes.iter().map(|node| node.warts_size()).sum();
+        let links_size: usize = self.links.iter().map(|link| link.warts_size()).sum();
+        self.length = (self.flags.warts_size()
+            + self.param_length.warts_size()
+            + param_length
+            + nodes_size
+            + links_size) as u32;
+        self
+    }
+}
+
+impl MultipathTraceNode {
+    pub fn fixup(&mut self) -> &mut Self {
+        let mut flags = Vec::new();
+        let mut param_length = 0;
+        push_flag!(flags, param_length, 1, self.addr_id);
+        push_flag!(flags, param_length, 2, self.node_flags);
+        push_flag!(flags, param_length, 3, self.link_count);
+        push_flag!(flags, param_length, 4, self.quoted_ttl);
+        push_flag!(flags, param_length, 5, self.addr);
+        push_flag!(flags, param_length, 6, self.name);
+        self.flags = Flags::from(flags);
+        self.param_length = Some(param_length as u16);
+        self
+    }
+}
+
+impl MultipathTraceLink {
+    pub fn fixup(&mut self) -> &mut Self {
+        let mut flags = Vec::new();
+        let mut param_length = 0;
+        self.probe_set_count = Some(self.probe_sets.len() as u8);
+        push_flag!(flags, param_length, 1, self.from);
+        push_flag!(flags, param_length, 2, self.to);
+        push_flag!(flags, param_length, 3, self.probe_set_count);
+        self.flags = Flags::from(flags);
+        self.param_length = Some(param_length as u16);
+        self
+    }
+}
+
+impl MultipathTraceProbeSet {
+    pub fn fixup(&mut self) -> &mut Self {
+        let mut flags = Vec::new();
+        let mut param_length = 0;
+        push_flag!(flags, param_length, 1, self.probe_count);
+        self.flags = Flags::from(flags);
+        self.param_length = Some(param_length as u16);
+        self
+    }
+}
+
+impl MultipathTraceProbe {
+    pub fn fixup(&mut self) -> &mut Self {
+        let mut flags = Vec::new();
+        let mut param_length = 0;
+        push_flag!(flags, param_length, 1, self.tx);
+        push_flag!(flags, param_length, 2, self.flow_id);
+        push_flag!(flags, param_length, 3, self.ttl);
+        push_flag!(flags, param_length, 4, self.attempts);
+        push_flag!(flags, param_length, 5, self.replies_count);
+        self.flags = Flags::from(flags);
+        self.param_length = Some(param_length as u16);
+        self
+    }
+}
+
+impl MultipathTraceReply {
+    pub fn fixup(&mut self) -> &mut Self {
+        let mut flags = Vec::new();
+        let mut param_length = 0;
+        push_flag!(flags, param_length, 1, self.rx);
+        push_flag!(flags, param_length, 2, self.ip_id);
+        push_flag!(flags, param_length, 3, self.ttl);
+        push_flag!(flags, param_length, 4, self.reply_flags);
+        push_flag!(flags, param_length, 5, self.icmp_type);
+        push_flag!(flags, param_length, 5, self.icmp_code);
+        push_flag!(flags, param_length, 6, self.tcp_flags);
+        push_flag!(flags, param_length, 7, self.icmp_extensions_length);
+        // TODO: icmp_extensions
+        push_flag!(flags, param_length, 8, self.quoted_ttl);
+        push_flag!(flags, param_length, 9, self.quoted_tos);
+        push_flag!(flags, param_length, 10, self.addr_id);
+        push_flag!(flags, param_length, 11, self.addr);
+        self.flags = Flags::from(flags);
+        self.param_length = Some(param_length as u16);
+        self
+    }
+}
+
+impl WartsSized for MultipathTraceNode {
+    fn warts_size(&self) -> usize {
+        self.flags.warts_size()
+            + self.param_length.warts_size()
+            + self.param_length.unwrap() as usize
+    }
+}
+
+impl WartsSized for MultipathTraceLink {
+    fn warts_size(&self) -> usize {
+        // TODO: Probe sets length? Or included in param length?
+        self.flags.warts_size()
+            + self.param_length.warts_size()
+            + self.param_length.unwrap() as usize
+    }
 }
