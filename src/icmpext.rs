@@ -20,10 +20,10 @@ pub struct ICMPExtension {
     #[deku(update = "self.mpls_labels.len() * 4")]
     data_length: u16,
     /// ICMP extension class number.
-    #[deku(assert_eq = "1")]
+    // #[deku(assert_eq = "1")]
     ext_class: u8,
     /// ICMP extension type number.
-    #[deku(assert_eq = "1")]
+    // #[deku(assert_eq = "1")]
     ext_type: u8,
     /// ICMP extension data, if any.
     #[deku(count = "data_length / 4")]

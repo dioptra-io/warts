@@ -30,6 +30,7 @@ pub enum Object {
 
 impl Object {
     // TODO: from_stream/iter/next
+    // https://github.com/sharksforarms/deku/issues/105
 
     pub fn all_from_bytes(data: &[u8]) -> Vec<Self> {
         let mut objects = Vec::new();
