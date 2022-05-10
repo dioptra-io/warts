@@ -22,6 +22,8 @@ pub enum TraceType {
 #[derive(Debug, PartialEq, DekuRead, DekuWrite)]
 #[deku(ctx = "endian: deku::ctx::Endian", endian = "endian", type = "u8")]
 pub enum TraceGapAction {
+    /// Null action.
+    None = 0x00,
     // Stop when gaplimit reached.
     Stop = 0x01,
     // Send TTL-255 probes.
