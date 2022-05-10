@@ -8,6 +8,7 @@
 mod macros;
 
 mod address;
+mod address_deprecated;
 mod cycle;
 mod flags;
 mod icmpext;
@@ -20,6 +21,7 @@ mod trace;
 mod tracelb;
 
 pub use address::*;
+pub use address_deprecated::*;
 pub use cycle::*;
 pub use flags::*;
 pub use icmpext::*;

@@ -54,7 +54,7 @@ Measured  with [hyperfine](https://github.com/sharkdp/hyperfine) on a 2020 M1 Ma
 | `0x0002` | `scamper_cycle_t`         | Cycle start                  | Y           |
 | `0x0003` | `scamper_cycle_t`         | Cycle definition             | Y           |
 | `0x0004` | `scamper_cycle_t`         | Cycle stop                   | Y           |
-| `0x0005` | `scamper_addr_t`          | Address (deprecated)         | N           |
+| `0x0005` | `scamper_addr_t`          | Address (deprecated)         | Y           |
 | `0x0006` | `scamper_trace_t`         | Traceroute                   | Y           |
 | `0x0007` | `scamper_ping_t`          | Ping                         | Y           |
 | `0x0008` | `scamper_tracelb_t`       | MDA traceroute               | Y           |

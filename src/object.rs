@@ -1,4 +1,6 @@
-use crate::{Address, CycleStart, CycleStop, List, MultipathTraceroute, Ping, Traceroute};
+use crate::{
+    Address, AddressDeprecated, CycleStart, CycleStop, List, MultipathTraceroute, Ping, Traceroute,
+};
 use deku::prelude::*;
 
 /// A warts object.
@@ -16,6 +18,9 @@ pub enum Object {
     /// A cycle stop record denotes the end point for a cycle.
     #[deku(id = "0x0004")]
     CycleStop(CycleStop),
+    /// A network address (deprecated).
+    #[deku(id = "0x0005")]
+    Address(AddressDeprecated),
     /// Traceroute structures consist of traceroute parameters, hop records, and an optional series
     /// of additional data types for special types of traceroute invocation.
     #[deku(id = "0x0006")]
@@ -53,15 +58,32 @@ impl Object {
                 if let Some(addr) = t.dst_addr {
                     table.push(addr);
                 }
+                for hop in t.hops.iter_mut() {
+                    if let Some(address) = hop.addr {
+                        table.push(address);
+                    }
+                }
+            }
+            Object::MultipathTraceroute(_) => todo!(),
+            _ => {}
+        }
+        self.dereference_with_table(&table);
+    }
+
+    pub fn dereference_with_table(&mut self, table: &[Address]) {
+        match self {
+            Object::Traceroute(t) => {
+                if let Some(id) = t.src_addr_id {
+                    t.src_addr = Some(table[id as usize - 1])
+                }
+                if let Some(id) = t.dst_addr_id {
+                    t.dst_addr = Some(table[id as usize - 1])
+                }
                 for mut hop in t.hops.iter_mut() {
-                    match hop.addr {
-                        Some(Address::Reference(id)) => {
-                            hop.addr = Some(table[id as usize]);
-                        }
-                        Some(address) => {
-                            table.push(address);
-                        }
-                        None => {}
+                    if let Some(Address::Reference(id)) = hop.addr {
+                        hop.addr = Some(table[id as usize]);
+                    } else if let Some(id) = hop.addr_id {
+                        hop.addr = Some(table[id as usize - 1])
                     }
                 }
             }
