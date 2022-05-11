@@ -59,8 +59,12 @@ impl Object {
                     table.push(addr);
                 }
                 for hop in t.hops.iter_mut() {
-                    if let Some(address) = hop.addr {
-                        table.push(address);
+                    match hop.addr {
+                        Some(Address::Reference(_)) => { /* skip references */ }
+                        Some(address) => {
+                            table.push(address);
+                        }
+                        _ => {}
                     }
                 }
             }
