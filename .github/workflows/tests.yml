@@ -26,7 +26,7 @@ jobs:
           RUSTFLAGS: "-Cinstrument-coverage"
           LLVM_PROFILE_FILE: "%p-%m.profraw"
       - name: Compute coverage
-        run: grcov . --binary-path ./target/debug/ --source-dir . --output-path lcov.info --output-type lcov --branch --ignore-not-existing --ignore "/*"
+        run: grcov . --binary-path ./target/debug/ --source-dir . --output-path lcov.info --output-type lcov --branch --ignore-not-existing --ignore "examples/*"
       - uses: codecov/codecov-action@v3
 
   publish:
