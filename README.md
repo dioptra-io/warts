@@ -1,6 +1,6 @@
 # 💢 warts
 
-[![Build](https://img.shields.io/github/workflow/status/dioptra-io/warts/Build)](https://github.com/dioptra-io/warts/actions/workflows/build.yml)
+[![Tests](https://img.shields.io/github/workflow/status/dioptra-io/warts/Tests)](https://github.com/dioptra-io/warts/actions/workflows/tests.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/dioptra-io/warts)](https://app.codecov.io/gh/dioptra-io/warts)
 [![crates.io](https://img.shields.io/crates/v/warts?logo=crates)](https://crates.io/crates/warts/)
 [![docs.rs](https://img.shields.io/docsrs/warts)](https://docs.rs/warts/)
