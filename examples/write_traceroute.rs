@@ -9,7 +9,7 @@ use warts::{
     TraceStopReason, TraceType, Traceroute,
 };
 
-fn main() {
+fn main() -> io::Result<()> {
     let list_name = CString::new("default").unwrap();
     let hostname = CString::new("ubuntu-linux-20-04-desktop").unwrap();
 
@@ -25,7 +25,7 @@ fn main() {
     };
     // The `fixup()` method computes and set the flags and length fields.
     list.fixup();
-    io::stdout().write_all(Object::List(list).to_bytes().unwrap().as_slice());
+    io::stdout().write_all(&Object::List(list).to_bytes().unwrap())?;
 
     let mut cycle_start = CycleStart {
         length: 0,
@@ -39,12 +39,7 @@ fn main() {
         hostname: Some(hostname),
     };
     cycle_start.fixup();
-    io::stdout().write_all(
-        Object::CycleStart(cycle_start)
-            .to_bytes()
-            .unwrap()
-            .as_slice(),
-    );
+    io::stdout().write_all(&Object::CycleStart(cycle_start).to_bytes().unwrap())?;
 
     let mut tp = TraceProbe {
         flags: Default::default(),
@@ -117,7 +112,7 @@ fn main() {
             .to_bytes()
             .unwrap()
             .as_slice(),
-    );
+    )?;
 
     let mut cycle_stop = CycleStop {
         length: 0,
@@ -126,5 +121,7 @@ fn main() {
         flags: Default::default(),
     };
     cycle_stop.fixup();
-    io::stdout().write_all(Object::CycleStop(cycle_stop).to_bytes().unwrap().as_slice());
+    io::stdout().write_all(&Object::CycleStop(cycle_stop).to_bytes().unwrap())?;
+
+    Ok(())
 }
