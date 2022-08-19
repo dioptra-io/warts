@@ -32,3 +32,6 @@ pub use sized::*;
 pub use timeval::*;
 pub use trace::*;
 pub use tracelb::*;
+
+// This trait must be imported by consumers who wants to write warts objects.
+pub use deku::DekuContainerWrite;
