@@ -110,19 +110,20 @@ impl Debug for Flags {
 
 impl DekuRead<'_, Endian> for Flags {
     fn read(
-        input: &'_ BitSlice<Msb0, u8>,
+        input: &'_ BitSlice<u8, Msb0>,
         _ctx: Endian,
-    ) -> Result<(&'_ BitSlice<Msb0, u8>, Self), DekuError>
+    ) -> Result<(&'_ BitSlice<u8, Msb0>, Self), DekuError>
     where
         Self: Sized,
     {
-        let (read, flags) = Flags::from_slice(input.as_raw_slice());
+        let (_, body, _) = input.domain().region().unwrap();
+        let (read, flags) = Flags::from_slice(body);
         Ok((input.get((read * 8)..).unwrap(), flags))
     }
 }
 
 impl DekuWrite<Endian> for Flags {
-    fn write(&self, output: &mut BitVec<Msb0, u8>, ctx: Endian) -> Result<(), DekuError> {
+    fn write(&self, output: &mut BitVec<u8, Msb0>, ctx: Endian) -> Result<(), DekuError> {
         self.to_vec().write(output, ctx)
     }
 }
@@ -147,7 +148,7 @@ mod tests {
 
     #[test]
     fn single_byte_without_flags() {
-        let bitslice = bitvec![Msb0, u8; 0, 0, 0, 0, 0, 0, 0, 0];
+        let bitslice = bitvec![u8, Msb0; 0, 0, 0, 0, 0, 0, 0, 0];
         let (read, flags) = Flags::from_slice(bitslice.as_raw_slice());
         assert_eq!(read, 1);
         assert!(!flags.any());
@@ -155,7 +156,7 @@ mod tests {
 
     #[test]
     fn single_byte_with_flags() {
-        let bitslice = bitvec![Msb0, u8; 0, 1, 0, 0, 0, 0, 0, 1];
+        let bitslice = bitvec![u8, Msb0; 0, 1, 0, 0, 0, 0, 0, 1];
         let (read, flags) = Flags::from_slice(bitslice.as_raw_slice());
         assert_eq!(read, 1);
         assert!(flags.any());
@@ -166,7 +167,7 @@ mod tests {
 
     #[test]
     fn two_bytes_with_flags() {
-        let bitslice = bitvec![Msb0, u8; 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1];
+        let bitslice = bitvec![u8, Msb0; 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1];
         let (read, flags) = Flags::from_slice(bitslice.as_raw_slice());
         assert_eq!(read, 2);
         assert!(flags.any());
