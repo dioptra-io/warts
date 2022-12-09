@@ -21,7 +21,7 @@ pub struct Timeval {
 
 impl From<Timeval> for NaiveDateTime {
     fn from(x: Timeval) -> Self {
-        NaiveDateTime::from_timestamp(x.seconds as i64, x.microseconds * 1000)
+        NaiveDateTime::from_timestamp_opt(x.seconds as i64, x.microseconds * 1000).unwrap()
     }
 }
 
@@ -47,7 +47,10 @@ mod tests {
 
     #[test]
     fn from_date_time() {
-        let dt = NaiveDate::from_ymd(2021, 2, 9).and_hms(0, 11, 45);
+        let dt = NaiveDate::from_ymd_opt(2021, 2, 9)
+            .unwrap()
+            .and_hms_opt(0, 11, 45)
+            .unwrap();
         assert_eq!(NaiveDateTime::from(Timeval::from(dt)), dt);
     }
 }

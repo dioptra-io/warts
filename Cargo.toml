@@ -1,6 +1,6 @@
 [package]
 name = "warts"
-version = "0.3.3"
+version = "0.3.4"
 description = "Rust implementation of the warts format."
 license = "MIT"
 authors = ["Maxime Mouchet <maxime.mouchet@lip6.fr>"]
@@ -9,4 +9,4 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4"
-deku = "0.13"
+deku = "0.15"
