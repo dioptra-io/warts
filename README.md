@@ -3,7 +3,7 @@
 [![Coverage](https://img.shields.io/codecov/c/github/dioptra-io/warts?logo=codecov&logoColor=white)](https://app.codecov.io/gh/dioptra-io/warts)
 [![crates.io](https://img.shields.io/crates/v/warts?logo=rust)](https://crates.io/crates/warts/)
 [![docs.rs](https://img.shields.io/docsrs/warts?logo=docs.rs)](https://docs.rs/warts/)
-[![Tests](https://img.shields.io/github/workflow/status/dioptra-io/warts/Tests?logo=github&label=tests)](https://github.com/dioptra-io/warts/actions/workflows/tests.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/dioptra-io/warts/tests.yml?logo=github&label=tests)](https://github.com/dioptra-io/warts/actions/workflows/tests.yml)
 
 This crate implements reading and writing
 [`warts(5)`](https://www.caida.org/catalog/software/scamper/man/warts.5.pdf)
