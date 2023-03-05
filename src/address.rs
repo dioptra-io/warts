@@ -1,6 +1,8 @@
-use crate::WartsSized;
-use deku::prelude::*;
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
+
+use deku::prelude::*;
+
+use crate::WartsSized;
 
 /// A network address, or a reference to a previously seen one.
 /// ```
@@ -25,6 +27,15 @@ pub enum Address {
     Ethernet(u8, [u8; 6]),
     #[deku(id = "8")]
     FireWire(u8, [u8; 8]),
+}
+
+impl From<IpAddr> for Address {
+    fn from(x: IpAddr) -> Self {
+        match x {
+            IpAddr::V4(ipv4) => ipv4.into(),
+            IpAddr::V6(ipv6) => ipv6.into(),
+        }
+    }
 }
 
 impl From<Ipv4Addr> for Address {
@@ -75,8 +86,9 @@ impl WartsSized for Address {
 
 #[cfg(test)]
 mod tests {
-    use crate::Address;
     use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
+
+    use crate::Address;
 
     #[test]
     fn from_ipv4() {
