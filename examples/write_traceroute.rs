@@ -13,7 +13,7 @@ fn main() -> io::Result<()> {
     let list_name = CString::new("default").unwrap();
     let hostname = CString::new("ubuntu-linux-20-04-desktop").unwrap();
 
-    let mut list = List {
+    let list = List {
         length: 0,
         list_id: 1,
         list_id_human: 0,
@@ -23,11 +23,10 @@ fn main() -> io::Result<()> {
         description: Some(list_name.clone()),
         monitor_name: None,
     };
-    // The `fixup()` method computes and set the flags and length fields.
-    list.fixup();
-    io::stdout().write_all(&Object::List(list).to_bytes().unwrap())?;
+    // The `finalize()` method computes and set the flags and length fields.
+    io::stdout().write_all(&Object::List(list.finalize()).to_bytes().unwrap())?;
 
-    let mut cycle_start = CycleStart {
+    let cycle_start = CycleStart {
         length: 0,
         cycle_id: 1,
         list_id: 1,
@@ -38,10 +37,13 @@ fn main() -> io::Result<()> {
         stop_time: None,
         hostname: Some(hostname),
     };
-    cycle_start.fixup();
-    io::stdout().write_all(&Object::CycleStart(cycle_start).to_bytes().unwrap())?;
+    io::stdout().write_all(
+        &Object::CycleStart(cycle_start.finalize())
+            .to_bytes()
+            .unwrap(),
+    )?;
 
-    let mut tp = TraceProbe {
+    let tp = TraceProbe {
         flags: Default::default(),
         param_length: None,
         addr_id: None,
@@ -66,9 +68,8 @@ fn main() -> io::Result<()> {
         addr: Some(Address::from(Ipv4Addr::new(137, 194, 164, 254))),
         tx: Some(Timeval::from(Utc::now().naive_utc())),
     };
-    tp.fixup();
 
-    let mut traceroute = Traceroute {
+    let traceroute = Traceroute {
         length: 0,
         flags: Flags::default(),
         param_length: None,
@@ -103,25 +104,23 @@ fn main() -> io::Result<()> {
         ip_offset: None,
         router_addr: None,
         hop_count: 1,
-        hops: vec![tp],
+        hops: vec![tp.finalize()],
         eof: 0,
     };
-    traceroute.fixup();
     io::stdout().write_all(
-        Object::Traceroute(traceroute)
+        Object::Traceroute(traceroute.finalize())
             .to_bytes()
             .unwrap()
             .as_slice(),
     )?;
 
-    let mut cycle_stop = CycleStop {
+    let cycle_stop = CycleStop {
         length: 0,
         cycle_id: 1,
         stop_time: Utc::now().timestamp() as u32,
         flags: Default::default(),
     };
-    cycle_stop.fixup();
-    io::stdout().write_all(&Object::CycleStop(cycle_stop).to_bytes().unwrap())?;
+    io::stdout().write_all(&Object::CycleStop(cycle_stop.finalize()).to_bytes().unwrap())?;
 
     Ok(())
 }

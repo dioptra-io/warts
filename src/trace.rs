@@ -253,7 +253,7 @@ pub struct TraceProbe {
 }
 
 impl Traceroute {
-    pub fn fixup(&mut self) -> &mut Self {
+    pub fn finalize(mut self) -> Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.list_id);
@@ -301,7 +301,7 @@ impl Traceroute {
 }
 
 impl TraceProbe {
-    pub fn fixup(&mut self) -> &mut Self {
+    pub fn finalize(mut self) -> Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.addr_id);

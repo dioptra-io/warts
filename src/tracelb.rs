@@ -192,7 +192,7 @@ pub struct MultipathTraceReply {
 }
 
 impl MultipathTraceroute {
-    pub fn fixup(&mut self) -> &mut Self {
+    pub fn finalize(mut self) -> Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         self.node_count = Some(self.nodes.len() as u16);
@@ -236,7 +236,7 @@ impl MultipathTraceroute {
 }
 
 impl MultipathTraceNode {
-    pub fn fixup(&mut self) -> &mut Self {
+    pub fn finalize(mut self) -> Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.addr_id);
@@ -252,7 +252,7 @@ impl MultipathTraceNode {
 }
 
 impl MultipathTraceLink {
-    pub fn fixup(&mut self) -> &mut Self {
+    pub fn finalize(mut self) -> Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         self.probe_set_count = Some(self.probe_sets.len() as u8);
@@ -266,7 +266,7 @@ impl MultipathTraceLink {
 }
 
 impl MultipathTraceProbeSet {
-    pub fn fixup(&mut self) -> &mut Self {
+    pub fn finalize(mut self) -> Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.probe_count);
@@ -277,7 +277,7 @@ impl MultipathTraceProbeSet {
 }
 
 impl MultipathTraceProbe {
-    pub fn fixup(&mut self) -> &mut Self {
+    pub fn finalize(mut self) -> Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.tx);
@@ -292,7 +292,7 @@ impl MultipathTraceProbe {
 }
 
 impl MultipathTraceReply {
-    pub fn fixup(&mut self) -> &mut Self {
+    pub fn finalize(mut self) -> Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.rx);

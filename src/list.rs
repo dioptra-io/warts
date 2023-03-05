@@ -27,7 +27,7 @@ pub struct List {
 }
 
 impl List {
-    pub fn fixup(&mut self) -> &mut Self {
+    pub fn finalize(mut self) -> Self {
         let mut flags = Vec::new();
         let mut param_length = 0;
         push_flag!(flags, param_length, 1, self.description);

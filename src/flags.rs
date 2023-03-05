@@ -4,7 +4,7 @@ use deku::ctx::Endian;
 use deku::{DekuError, DekuRead, DekuWrite};
 use std::fmt::{Debug, Formatter};
 
-// TODO: Automatically generate `fixup()` methods with a derive macro?
+// TODO: Automatically generate `finalize()` methods with a derive macro?
 
 /// A variable length flag structure.
 ///
